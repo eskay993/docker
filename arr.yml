@@ -58,7 +58,7 @@ services:
     volumes:
       - ${APPDATA}/sabnzbd:/config
       - ${INCOMING}:/downloads #optional
-      - ${TEMP}/sabnzbd:/temp/sabnzbd #optional
+      - ${TEMP}:/temp #optional
     # ports:
     #   - 8080:8080
     depends_on:
