@@ -1,0 +1,87 @@
+services:
+  vpn-nl:
+    image: qmcgaw/gluetun
+    container_name: vpn-nl
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${APPDATA}/gluetun:/gluetun
+    env_file:
+      - ${ENV_FILES}/vpn-nl.env
+    ports:
+      - 8888:8888/tcp     # HTTP proxy
+      - 8388:8388/tcp     # Shadowsocks
+      - 8388:8388/udp     # Shadowsocks
+      - 8000:8000/tcp     # Built-in HTTP control server
+      - 34400:34400       # xteve
+
+  xteve:
+    image: alturismo/xteve
+    container_name: xteve
+    restart: unless-stopped
+    network_mode: service:vpn-nl
+    # network_mode: host
+    volumes:
+      - ${APPDATA}/xteve/root:/root/.xteve:rw
+      - ${APPDATA}/xteve/config:/config:rw 
+      - ${TEMP}/xteve:/tmp/xteve:rw
+      - ${APPDATA}/m3uweb:/www:rw
+    environment:
+      - TZ=${TIMEZONE}
+    # ports:
+    #   - 34400:34400
+    depends_on:
+      vpn-nl:
+        condition: service_started    
+
+  m3uweb:
+    image: rtsp/lighttpd
+    container_name: m3uweb
+    restart: unless-stopped
+    # network_mode: host
+    volumes:
+      - ${APPDATA}/m3uweb:/var/www/html:ro
+    environment:
+      - TZ=${TIMEZONE}
+    ports:
+      - 8080:80
+
+  # tvheadend:
+  #   image: lscr.io/linuxserver/tvheadend:latest
+  #   container_name: tvheadend
+  #   network_mode: service:vpn-nl
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=${UID_MAIN}
+  #     - PGID=${UID_MAIN}
+  #     - TZ=${TIMEZONE}
+  #     - RUN_OPTS= #optional
+  #   volumes:
+  #     - ${APPDATA}/tvheadend:/config
+  #     - ${STORAGE}/Downloads/Recordings:/recordings
+  #   # ports:
+  #   #   - 9981:9981
+  #   #   - 9982:9982
+  #   # devices:
+  #   #   - /dev/dri:/dev/dri #optional
+  #   #   - /dev/dvb:/dev/dvb #optional
+  #   depends_on:
+  #     vpn-nl:
+  #       condition: service_started        
+
+  webgrabplus:
+    image: lscr.io/linuxserver/webgrabplus:latest
+    container_name: webgrabplus
+    hostname: iptv
+    mac_address: ${WGP_MAC}
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/webgrabplus/config:/config
+      - ${APPDATA}/webgrabplus/data:/data
+    restart: unless-stopped

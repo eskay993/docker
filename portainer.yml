@@ -1,0 +1,18 @@
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${APPDATA}/portainer:/data
+      - ${ENV_FILES}:${ENV_FILES}
+    ports:
+      - 8003:8000
+      - 9000:9000
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - CONTEXT_PATH=/dash   
+volumes:
+  portainer_data:

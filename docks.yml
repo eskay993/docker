@@ -1,0 +1,45 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    restart: unless-stopped
+    # hostname: syncthing #optional
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${APPDATA}/syncthing:/config
+      - ${GDRIVE}:/gdrive
+      - ${INCOMING}/sync:/sync
+      - ${STORAGE}/Games:/games
+      - ${ITCHY}/backup:/backup
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    
+  homer:
+    container_name: homer
+    image: b4bz/homer:latest
+    restart: unless-stopped
+    user: "${UID_MAIN}:${UID_MAIN}"
+    volumes:
+      - ${APPDATA}/homer:/www/assets
+    environment:
+      - TZ=${TIMEZONE}
+    ports:
+      - 8050:8080
+
+  ownfoil:
+    container_name: ownfoil
+    image: a1ex4/ownfoil
+    restart: unless-stopped
+    env_file:
+    - ${ENV_FILES}/ownfoil.env
+    volumes:
+      - ${STORAGE}/Games/switch:/games
+      # - ${APPDATA}/ownfoil:/config
+    ports:
+      - "8500:80"

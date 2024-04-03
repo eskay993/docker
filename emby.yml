@@ -1,0 +1,48 @@
+services:
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: emby
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${APPDATA}/emby:/config
+      - ${APPDATA}/webgrabplus/data:/epg
+      - ${BACKUP}/emby:/backup
+      - ${STORAGE}/Movies:/Movies
+      - ${STORAGE}/TV:/TV
+      - ${STORAGE}/Downloads:/Downloads
+      - ${STORAGE}/Music:/Music
+      - ${TEMP}/transcode:/transcode
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+    devices:
+      - /dev/dri:/dev/dri
+    # ports:
+    #   - 8096:8096 # HTTP port
+    #   - 8920:8920 # HTTPS port
+
+
+  # emby:
+  #   image: emby/embyserver
+  #   container_name: emby
+  #   restart: unless-stopped
+  #   # network_mode: host
+  #   volumes:
+  #     - ${APPDATA}/emby:/config
+  #     - ${APPDATA}/webgrabplus/data:/epg
+  #     - ${BACKUP}/emby:/backup
+  #     - ${STORAGE}/Movies:Movies
+  #     - ${STORAGE}/TV:/TV
+  #     - ${STORAGE}/Downloads:/Downloads
+  #     - ${STORAGE}/Music:/Music
+  #     - ${TEMP}/transcode:/transcode
+  #   environment:
+  #     - UID=${UID_MAIN}
+  #     - GID=${UID_MAIN}
+  #     - GIDLIST=44,104  # do `ls -l /dev/dri` and add group numbers of card0 and renderD128
+  #   ports:
+  #     - 8096:8096 # HTTP port
+  #     - 8920:8920 # HTTPS port
+  #   devices:
+  #     - /dev/dri:/dev/dri
