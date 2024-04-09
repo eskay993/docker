@@ -23,6 +23,8 @@ services:
       - 3579:3579         # ombi
       - 8080:8080         # sabnzbd
       - 5800:5800         # jdownloader
+      - 8020:8020         # pyload (change in pyload.cfg)
+      - 9666:9666
       - 6500:6500         # rdt-client
       - 8082:8082         # qbitorrent (Note: manually change port qBittorrent.conf)
       - 6881:6881       
@@ -166,18 +168,37 @@ services:
       vpn-ch:
         condition: service_healthy 
 
-  jdownloader:
-    image: jlesage/jdownloader-2
-    container_name: jdownloader
+          #  jdownloader:
+          #    image: jlesage/jdownloader-2
+          #    container_name: jdownloader
+          #    network_mode: service:vpn-ch
+          #    restart: unless-stopped
+          #    volumes:
+          #      - ${APPDATA}/jdownloader:/config:rw
+          #      - ${INCOMING}:/output:rw
+          #    # ports:
+          #    #   - 5800:5800
+          #    env_file:
+          #      - ${ENV_FILES}/jd.env
+          #    depends_on:
+          #      vpn-ch:
+          #        condition: service_healthy
+
+  pyload:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    container_name: pyload
     network_mode: service:vpn-ch
     restart: unless-stopped
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - TZ=${TIMEZONE}
     volumes:
-      - ${APPDATA}/jdownloader:/config:rw
-      - ${INCOMING}:/output:rw
-    # ports:
-    #   - 5800:5800
-    env_file:
-      - ${ENV_FILES}/jd.env
+      - ${APPDATA}/pyload:/config
+      - ${INCOMING}:/downloads
+        #    ports:
+        #      - 8020:8020 #change in pyload.cfg
+        #      - 9666:9666 #optional
     depends_on:
       vpn-ch:
         condition: service_healthy
