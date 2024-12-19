@@ -156,7 +156,7 @@ services:
       - PGID=${UID_MAIN}  
     volumes:
         - ${APPDATA}/rdtclient:/data/db
-        - ${TEMP}/rdtclient:/data/downloads
+        - ${TEMP}:/data/downloads
         - ${INCOMING}:/incoming
     logging:
       driver: json-file
