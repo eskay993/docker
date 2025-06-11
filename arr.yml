@@ -156,7 +156,7 @@ services:
       - PGID=${UID_MAIN}  
     volumes:
         - ${APPDATA}/rdtclient:/data/db
-        - ${TEMP}/rdtclient:/data/downloads
+        - ${TEMP}:/data/downloads
         - ${INCOMING}:/incoming
     logging:
       driver: json-file
@@ -168,21 +168,21 @@ services:
       vpn-ch:
         condition: service_healthy 
 
-          #  jdownloader:
-          #    image: jlesage/jdownloader-2
-          #    container_name: jdownloader
-          #    network_mode: service:vpn-ch
-          #    restart: unless-stopped
-          #    volumes:
-          #      - ${APPDATA}/jdownloader:/config:rw
-          #      - ${INCOMING}:/output:rw
-          #    # ports:
-          #    #   - 5800:5800
-          #    env_file:
-          #      - ${ENV_FILES}/jd.env
-          #    depends_on:
-          #      vpn-ch:
-          #        condition: service_healthy
+  jdownloader:
+    image: jlesage/jdownloader-2
+    container_name: jdownloader
+    network_mode: service:vpn-ch
+    restart: unless-stopped
+    volumes:
+      - ${APPDATA}/jdownloader:/config:rw
+      - ${INCOMING}:/output:rw
+    # ports:
+    #   - 5800:5800
+    env_file:
+      - ${ENV_FILES}/jd.env
+    depends_on:
+      vpn-ch:
+        condition: service_healthy
 
   pyload:
     image: lscr.io/linuxserver/pyload-ng:latest
@@ -195,7 +195,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ${APPDATA}/pyload:/config
-      - ${INCOMING}:/downloads
+      - ${INCOMING}/pyload:/downloads
         #    ports:
         #      - 8020:8020 #change in pyload.cfg
         #      - 9666:9666 #optional
@@ -214,9 +214,9 @@ services:
     network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
-      - ${INCOMING}:/downloads
       - ${APPDATA}/qbittorrent:/config
-      - ${TEMP}/torrent:/temp/torrent 
+      - ${TEMP}:/temp
+      - ${INCOMING}:/downloads      
     environment:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
@@ -230,3 +230,23 @@ services:
       vpn-ch:
         condition: service_healthy
 
+
+          #  resilio-sync:
+          #    image: lscr.io/linuxserver/resilio-sync:latest
+          #    container_name: resilio
+          #    network_mode: service:vpn-ch
+          #    restart: unless-stopped
+          #    environment:
+          #      - PUID=${UID_MAIN}
+          #      - PGID=${UID_MAIN}
+          #      - TZ=${TIMEZONE}
+          #    volumes:
+          #      - ${APPDATA}/resilio:/config
+          #      - ${INCOMING}/resilio/downloads:/downloads
+          #      - ${INCOMING}/resilio/sync:/sync
+          #    # ports:
+          #    #   - 8888:8888
+          #    #   - 55555:55555
+          #    depends_on:
+          #      vpn-ch:
+          #        condition: service_healthy    

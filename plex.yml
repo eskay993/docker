@@ -1,0 +1,23 @@
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - TZ=${TIMEZONE}
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    volumes:
+      - ${APPDATA}/plex:/config
+      - ${APPDATA}/webgrabplus/data:/epg
+      - ${APPDATA}/m3uweb:/m3u
+      - ${STORAGE}/Movies:/Movies
+      - ${STORAGE}/TV:/TV
+      - ${STORAGE}/Downloads:/Downloads
+      - ${STORAGE}/Music:/Music
+      - ${TEMP}/transcode:/transcode
+    devices:
+      - /dev/dri:/dev/dri      
+    restart: unless-stopped

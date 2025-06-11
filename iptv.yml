@@ -18,21 +18,39 @@ services:
       - 8000:8000/tcp     # Built-in HTTP control server
       - 34400:34400       # xteve
 
-  xteve:
-    image: alturismo/xteve
-    container_name: xteve
-    restart: unless-stopped
+      #  xteve:
+      #    image: alturismo/xteve
+      #    container_name: xteve
+      #    restart: unless-stopped
+      #    network_mode: service:vpn-nl
+      #    # network_mode: host
+      #    volumes:
+      #      - ${APPDATA}/xteve/root:/root/.xteve:rw
+      #      - ${APPDATA}/xteve/config:/config:rw 
+      #      - ${TEMP}/xteve:/tmp/xteve:rw
+      #      - ${APPDATA}/m3uweb:/www:rw
+      #    environment:
+      #      - TZ=${TIMEZONE}
+      #    # ports:
+      #    #   - 34400:34400
+      #    depends_on:
+      #      vpn-nl:
+      #        condition: service_started    
+  
+  threadfin:
+    image: fyb3roptik/threadfin
+    container_name: threadfin
     network_mode: service:vpn-nl
-    # network_mode: host
-    volumes:
-      - ${APPDATA}/xteve/root:/root/.xteve:rw
-      - ${APPDATA}/xteve/config:/config:rw 
-      - ${TEMP}/xteve:/tmp/xteve:rw
-      - ${APPDATA}/m3uweb:/www:rw
+    #ports:
+    #  - 34400:34400
     environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}
-    # ports:
-    #   - 34400:34400
+    volumes:
+      - ${APPDATA}/threadfin/conf:/home/threadfin/conf
+      - ${APPDATA}/threadfin/temp:/tmp/threadfin:rw
+    restart: unless-stopped
     depends_on:
       vpn-nl:
         condition: service_started    
@@ -43,7 +61,7 @@ services:
     restart: unless-stopped
     # network_mode: host
     volumes:
-      - ${APPDATA}/m3uweb:/var/www/html:ro
+      - ${APPDATA}/m3uweb:/var/www/html
     environment:
       - TZ=${TIMEZONE}
     ports:

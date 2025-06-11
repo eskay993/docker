@@ -1,0 +1,20 @@
+services:
+  omada-controller:
+    image: mbentley/omada-controller
+    container_name: omada
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ${APPDATA}/omada/data:/opt/tplink/EAPController/data
+      - ${APPDATA}/omada/logs:/opt/tplink/EAPController/logs
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+    #ports:
+    #  - 8088:8088
+    #  - 8043:8043
+    #  - 8843:8843
+    #  - 19810:19810/udp
+    #  - 27001:27001/udp
+    #  - 29810:29810/udp
+    #  - 29811-29816:29811-29816

@@ -43,3 +43,29 @@ services:
       # - ${APPDATA}/ownfoil:/config
     ports:
       - "8500:80"
+
+#  slaanesh:
+#    image: ghcr.io/h-quer/slaanesh:latest
+#    container_name: slaanesh
+#    user: ${UID_MAIN}:${UID_MAIN}
+#    restart: unless-stopped
+#    volumes:
+#      - ${APPDATA}/slaanesh/config:/files/config
+#      - ${APPDATA}/slaanesh/import:/files/import
+#      - ${APPDATA}/slaanesh/export:/files/export
+#      - ${APPDATA}/slaanesh/covers:/files/covers
+#      - ${APPDATA}/slaanesh/database:/files/database
+#      - ${APPDATA}/slaanesh/downloads:/files/downloads
+#    ports:
+#      - 8428:8080
+
+
+  # ps2smb:
+  #   container_name: ps2smb
+  #   image: fortu/ps2smb
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${APPDATA}/ps2smb/smb.conf':/etc/samba/smb.conf:rw 
+  #     - ${STORAGE}/Games/ps2opl:/mnt/games:rw
+  #   ports:
+  #     - "445:445/tcp"

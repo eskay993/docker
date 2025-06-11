@@ -1,0 +1,36 @@
+services:
+  vpn-uk:
+    image: qmcgaw/gluetun
+    container_name: vpn-uk
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${APPDATA}/gluetun:/gluetun
+    env_file:
+      - ${ENV_FILES}/vpn-uk.env
+    ports:
+      - 8888:8888/tcp     # HTTP proxy
+      - 8388:8388/tcp     # Shadowsocks
+      - 8388:8388/udp     # Shadowsocks
+      - 8000:8000/tcp     # Built-in HTTP control server
+
+  vpn-ch:
+    image: qmcgaw/gluetun
+    container_name: vpn-ch
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${APPDATA}/gluetun:/gluetun
+    env_file:
+      - ${ENV_FILES}/vpn-ch.env
+    ports:
+      - 8889:8888/tcp     # HTTP proxy
+      - 8389:8388/tcp     # Shadowsocks
+      - 8389:8388/udp     # Shadowsocks
+      - 8001:8000/tcp     # Built-in HTTP control server
