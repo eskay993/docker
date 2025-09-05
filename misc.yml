@@ -44,6 +44,15 @@ services:
     ports:
       - "8500:80"
 
+  phoneinfoga:
+    container_name: phoneinfoga
+    restart: on-failure
+    image: sundowndev/phoneinfoga:latest
+    command:
+      - "serve"
+    ports:
+      - "8080:5000"
+
 #  slaanesh:
 #    image: ghcr.io/h-quer/slaanesh:latest
 #    container_name: slaanesh
