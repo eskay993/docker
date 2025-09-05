@@ -20,6 +20,7 @@ services:
       - 9696:9696         # prowlarr
       - 8989:8989         # sonarr
       - 7878:7878         # radarr
+      - 11011:11011       # cleanuparr
       - 3579:3579         # ombi
       - 8080:8080         # sabnzbd
       - 5800:5800         # jdownloader
@@ -106,6 +107,23 @@ services:
       - TZ=${TIMEZONE}      
     # ports:
     #   - 7878:7878
+    depends_on:
+      vpn-ch:
+        condition: service_started      
+
+  cleanuparr:
+    image: ghcr.io/cleanuparr/cleanuparr:latest 
+    container_name: cleanuparr
+    network_mode: service:vpn-ch
+    restart: unless-stopped
+    volumes:
+      - ${APPDATA}/cleanuparr:/config
+    environment:
+      - PUID=${UID_MAIN}
+      - PGID=${UID_MAIN}
+      - TZ=${TIMEZONE}      
+    # ports:
+    #   - 11011:11011
     depends_on:
       vpn-ch:
         condition: service_started      
