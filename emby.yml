@@ -13,6 +13,7 @@ services:
       - ${STORAGE}/TV:/TV
       - ${STORAGE}/Downloads:/Downloads
       - ${STORAGE}/Music:/Music
+      - ${STORAGE}/Recordings/Emby:/Recordings
       - ${TEMP}/transcode:/transcode
     environment:
       - PUID=${UID_MAIN}
