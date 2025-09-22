@@ -32,6 +32,18 @@ services:
     ports:
       - 8050:8080
 
+  homarr:
+    container_name: homarr
+    image: ghcr.io/homarr-labs/homarr:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+      - ${APPDATA}/homarr:/appdata
+    env_file:
+      - ${ENV_FILES}/homarr.env
+    ports:
+      - '7575:7575'
+
   ownfoil:
     container_name: ownfoil
     image: a1ex4/ownfoil
@@ -52,6 +64,39 @@ services:
       - "serve"
     ports:
       - "8080:5000"
+
+  wallabag:
+    image: wallabag/wallabag
+    container_name: wallabag
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILES}/wallabag.env
+    ports:
+      - "8008:80"
+    volumes:
+      - ${APPDATA}/wallabag/images:/var/www/wallabag/web/assets/images
+    depends_on:
+      - db
+      - redis
+  db:
+    image: mariadb
+    restart: unless-stopped
+    env_file:
+      - ${ENV_FILES}/wallabag.env
+    volumes:
+      - ${APPDATA}/wallabag/data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--innodb_initialized"]
+      interval: 20s
+      timeout: 3s
+  redis:
+    image: redis:alpine
+    restart: unless-stopped    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 20s
+      timeout: 3s
+
 
 #  slaanesh:
 #    image: ghcr.io/h-quer/slaanesh:latest
