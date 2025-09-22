@@ -20,6 +20,7 @@ services:
       - 9696:9696         # prowlarr
       - 8989:8989         # sonarr
       - 7878:7878         # radarr
+      - 9705:9705         # huntarr
       - 11011:11011       # cleanuparr
       - 3579:3579         # ombi
       - 8080:8080         # sabnzbd
@@ -107,6 +108,21 @@ services:
       - TZ=${TIMEZONE}      
     # ports:
     #   - 7878:7878
+    depends_on:
+      vpn-ch:
+        condition: service_started      
+
+  huntarr:
+    image: huntarr/huntarr:latest
+    container_name: huntarr
+    network_mode: service:vpn-ch
+    restart: always
+    #ports:
+    #  - "9705:9705"
+    volumes:
+      - ${APPDATA}/huntarr:/config
+    environment:
+      - TZ=${TIMEZONE}
     depends_on:
       vpn-ch:
         condition: service_started      
