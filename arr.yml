@@ -1,59 +1,59 @@
 services:
-  vpn-ch:
-    image: qmcgaw/gluetun
-    container_name: vpn-ch
-    restart: always
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    volumes:
-      - ${APPDATA}/gluetun:/gluetun
-    env_file:
-      - ${ENV_FILES}/vpn-ch.env
-    ports:
-      - 8888:8888/tcp     # HTTP proxy
-      - 8388:8388/tcp     # Shadowsocks
-      - 8388:8388/udp     # Shadowsocks
-      - 8000:8000/tcp     # Built-in HTTP control server
-      - 8191:8191         # flaresolverr
-      - 9696:9696         # prowlarr
-      - 8989:8989         # sonarr
-      - 7878:7878         # radarr
-      - 9705:9705         # huntarr
-      - 11011:11011       # cleanuparr
-      - 3579:3579         # ombi
-      - 8080:8080         # sabnzbd
-      - 5800:5800         # jdownloader
-      - 8020:8020         # pyload (change in pyload.cfg)
-      - 9666:9666
-      - 6500:6500         # rdt-client
-      - 8082:8082         # qbitorrent (Note: manually change port qBittorrent.conf)
-      - 6881:6881       
-      - 6881:6881/udp
-      - 8889:8889         # resilio
-      - 55555:55555
+  # vpn-ch:
+  #   image: qmcgaw/gluetun
+  #   container_name: vpn-ch
+  #   restart: always
+  #   cap_add:
+  #     - NET_ADMIN
+  #   devices:
+  #     - /dev/net/tun:/dev/net/tun
+  #   volumes:
+  #     - ${APPDATA}/gluetun:/gluetun
+  #   env_file:
+  #     - ${ENV_FILES}/vpn-ch.env
+  #   ports:
+  #     - 8888:8888/tcp     # HTTP proxy
+  #     - 8388:8388/tcp     # Shadowsocks
+  #     - 8388:8388/udp     # Shadowsocks
+  #     - 8000:8000/tcp     # Built-in HTTP control server
+  #     - 8191:8191         # flaresolverr
+  #     - 9696:9696         # prowlarr
+  #     - 8989:8989         # sonarr
+  #     - 7878:7878         # radarr
+  #     - 9705:9705         # huntarr
+  #     - 11011:11011       # cleanuparr
+  #     - 3579:3579         # ombi
+  #     - 8080:8080         # sabnzbd
+  #     - 5800:5800         # jdownloader
+  #     - 8020:8020         # pyload (change in pyload.cfg)
+  #     - 9666:9666
+  #     - 6500:6500         # rdt-client
+  #     - 8082:8082         # qbitorrent (Note: manually change port qBittorrent.conf)
+  #     - 6881:6881       
+  #     - 6881:6881/udp
+  #     - 8889:8889         # resilio
+  #     - 55555:55555
 
   flaresolverr:
     image: flaresolverr/flaresolverr:latest
     container_name: flaresolverr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     environment:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}
       - LOG_LEVEL=info
-    # ports:
-    #   - 8191:8191
-    depends_on:
-      vpn-ch:
-        condition: service_started
+    ports:
+      - 8191:8191
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started
   
   sabnzbd:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbd
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     environment:
       - PUID=${UID_MAIN}
@@ -63,17 +63,17 @@ services:
       - ${APPDATA}/sabnzbd:/config
       - ${INCOMING}:/downloads #optional
       - ${TEMP}:/temp #optional
-    # ports:
-    #   - 8080:8080
-    depends_on:
-      vpn-ch:
-        condition: service_started
+    ports:
+      - 8080:8080
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started
 
 
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
       - ${APPDATA}/sonarr:/config
@@ -85,16 +85,16 @@ services:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}
-    # ports:
-    #   - 8989:8989
-    depends_on:
-      vpn-ch:
-        condition: service_started     
+    ports:
+      - 8989:8989
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started     
 
   radarr:
     image: linuxserver/radarr
     container_name: radarr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
       - ${APPDATA}/radarr:/config
@@ -106,31 +106,31 @@ services:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}      
-    # ports:
-    #   - 7878:7878
-    depends_on:
-      vpn-ch:
-        condition: service_started      
+    ports:
+      - 7878:7878
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started      
 
   huntarr:
     image: huntarr/huntarr:latest
     container_name: huntarr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: always
-    #ports:
-    #  - "9705:9705"
+    ports:
+     - "9705:9705"
     volumes:
       - ${APPDATA}/huntarr:/config
     environment:
       - TZ=${TIMEZONE}
-    depends_on:
-      vpn-ch:
-        condition: service_started      
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started      
 
   cleanuparr:
     image: ghcr.io/cleanuparr/cleanuparr:latest 
     container_name: cleanuparr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
       - ${APPDATA}/cleanuparr:/config
@@ -138,16 +138,16 @@ services:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}      
-    # ports:
-    #   - 11011:11011
-    depends_on:
-      vpn-ch:
-        condition: service_started      
+    ports:
+      - 11011:11011
+#    depends_on:
+#      vpn-ch:
+#        condition: service_started      
 
   ombi:
     image: lscr.io/linuxserver/ombi:latest
     container_name: ombi
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     environment:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
@@ -155,17 +155,17 @@ services:
       - BASE_URL=/ombi #optional
     volumes:
       - ${APPDATA}/ombi:/config
-    # ports:
-    #   - 3579:3579
+    ports:
+      - 3579:3579
     restart: unless-stopped
-    depends_on:
-      vpn-ch:
-        condition: service_healthy    
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     environment:
       - PUID=${UID_MAIN}
@@ -173,17 +173,17 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - ${APPDATA}/prowlarr:/config
-    # ports:
-    #   - 9696:9696
-    depends_on:
-      vpn-ch:
-        condition: service_healthy     
+    ports:
+      - 9696:9696
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy     
 
 
   rdtclient:
     image: rogerfar/rdtclient
     container_name: rdtclient
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: always
     environment:
       - PUID=${UID_MAIN}
@@ -196,32 +196,32 @@ services:
       driver: json-file
       options:
           max-size: 10m
-    # ports:
-    #   - 6500:6500
-    depends_on:
-      vpn-ch:
-        condition: service_healthy 
+    ports:
+      - 6500:6500
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy 
 
   jdownloader:
     image: jlesage/jdownloader-2
     container_name: jdownloader
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
       - ${APPDATA}/jdownloader:/config:rw
       - ${INCOMING}:/output:rw
-    # ports:
-    #   - 5800:5800
+    ports:
+      - 5800:5800
     env_file:
       - ${ENV_FILES}/jd.env
-    depends_on:
-      vpn-ch:
-        condition: service_healthy
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy
 
   pyload:
     image: lscr.io/linuxserver/pyload-ng:latest
     container_name: pyload
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     environment:
       - PUID=${UID_MAIN}
@@ -230,12 +230,12 @@ services:
     volumes:
       - ${APPDATA}/pyload:/config
       - ${INCOMING}/pyload:/downloads
-        #    ports:
-        #      - 8020:8020 #change in pyload.cfg
-        #      - 9666:9666 #optional
-    depends_on:
-      vpn-ch:
-        condition: service_healthy
+    ports:
+      - 8020:8020 #change in pyload.cfg
+      - 9666:9666 #optional
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy
 
   qbittorrent:
   # NOTE: There is a bug with version qB 14.4+ which causes "error: No such device"
@@ -245,7 +245,7 @@ services:
     image: lscr.io/linuxserver/qbittorrent
     # image: lscr.io/linuxserver/qbittorrent:14.3.9
     container_name: qbittorrent
-    network_mode: service:vpn-ch
+#    network_mode: service:vpn-ch
     restart: unless-stopped
     volumes:
       - ${APPDATA}/qbittorrent:/config
@@ -256,19 +256,19 @@ services:
       - PGID=${UID_MAIN}
       - TZ=${TIMEZONE}
       - WEBUI_PORT=8082  # Note: Also manually change this in qBittorrent.conf
-    # ports:
-    #   - 8082:8082
-    #   - 6881:6881
-    #   - 6881:6881/udp
-    depends_on:
-      vpn-ch:
-        condition: service_healthy
+    ports:
+      - 8082:8082
+      - 6881:6881
+      - 6881:6881/udp
+    # depends_on:
+    #   vpn-ch:
+    #     condition: service_healthy
 
 
           #  resilio-sync:
           #    image: lscr.io/linuxserver/resilio-sync:latest
           #    container_name: resilio
-          #    network_mode: service:vpn-ch
+          ##    network_mode: service:vpn-ch
           #    restart: unless-stopped
           #    environment:
           #      - PUID=${UID_MAIN}
