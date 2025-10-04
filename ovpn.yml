@@ -34,3 +34,4 @@ services:
       - 8389:8388/tcp     # Shadowsocks
       - 8389:8388/udp     # Shadowsocks
       - 8001:8000/tcp     # Built-in HTTP control server
+
