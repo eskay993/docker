@@ -97,7 +97,6 @@ services:
       interval: 20s
       timeout: 3s
 
-
 #  slaanesh:
 #    image: ghcr.io/h-quer/slaanesh:latest
 #    container_name: slaanesh

@@ -34,6 +34,15 @@ services:
   #     - 8889:8889         # resilio
   #     - 55555:55555
 
+  socks5-ch:
+    image: serjs/go-socks5-proxy:latest
+    container_name: socks5-ch
+    env_file:
+      - ${ENV_FILES}/socks5.env
+    ports:
+      - "${PROXY_PORT}:${PROXY_PORT}"
+    restart: unless-stopped
+
   flaresolverr:
     image: flaresolverr/flaresolverr:latest
     container_name: flaresolverr

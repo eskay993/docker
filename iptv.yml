@@ -1,22 +1,22 @@
 services:
-  vpn-nl:
-    image: qmcgaw/gluetun
-    container_name: vpn-nl
-    restart: always
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    volumes:
-      - ${APPDATA}/gluetun:/gluetun
-    env_file:
-      - ${ENV_FILES}/vpn-nl.env
-    ports:
-      - 8888:8888/tcp     # HTTP proxy
-      - 8388:8388/tcp     # Shadowsocks
-      - 8388:8388/udp     # Shadowsocks
-      - 8000:8000/tcp     # Built-in HTTP control server
-      - 34400:34400       # xteve
+#  vpn-nl:
+#    image: qmcgaw/gluetun
+#    container_name: vpn-nl
+#    restart: always
+#    cap_add:
+#      - NET_ADMIN
+#    devices:
+#      - /dev/net/tun:/dev/net/tun
+#    volumes:
+#      - ${APPDATA}/gluetun:/gluetun
+#    env_file:
+#      - ${ENV_FILES}/vpn-nl.env
+#    ports:
+#      - 8888:8888/tcp     # HTTP proxy
+#      - 8388:8388/tcp     # Shadowsocks
+#      - 8388:8388/udp     # Shadowsocks
+#      - 8000:8000/tcp     # Built-in HTTP control server
+#      - 34400:34400       # xteve
 
       #  xteve:
       #    image: alturismo/xteve
@@ -40,9 +40,9 @@ services:
   threadfin:
     image: fyb3roptik/threadfin
     container_name: threadfin
-    network_mode: service:vpn-nl
-    #ports:
-    #  - 34400:34400
+#    network_mode: service:vpn-nl
+    ports:
+      - 34400:34400
     environment:
       - PUID=${UID_MAIN}
       - PGID=${UID_MAIN}
@@ -51,9 +51,9 @@ services:
       - ${APPDATA}/threadfin/conf:/home/threadfin/conf
       - ${APPDATA}/threadfin/temp:/tmp/threadfin:rw
     restart: unless-stopped
-    depends_on:
-      vpn-nl:
-        condition: service_started    
+#    depends_on:
+#      vpn-nl:
+#        condition: service_started    
 
   m3uweb:
     image: rtsp/lighttpd
@@ -102,4 +102,13 @@ services:
     volumes:
       - ${APPDATA}/webgrabplus/config:/config
       - ${APPDATA}/webgrabplus/data:/data
+    restart: unless-stopped
+
+  socks5-uk:
+    image: serjs/go-socks5-proxy:latest
+    container_name: socks5-uk
+    env_file:
+      - ${ENV_FILES}/socks5.env
+    ports:
+      - "${PROXY_PORT}:${PROXY_PORT}"
     restart: unless-stopped
