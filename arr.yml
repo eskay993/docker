@@ -121,37 +121,37 @@ services:
 #      vpn-ch:
 #        condition: service_started      
 
-  huntarr:
-    image: huntarr/huntarr:latest
-    container_name: huntarr
-#    network_mode: service:vpn-ch
-    restart: always
-    ports:
-     - "9705:9705"
-    volumes:
-      - ${APPDATA}/huntarr:/config
-    environment:
-      - TZ=${TIMEZONE}
-#    depends_on:
-#      vpn-ch:
-#        condition: service_started      
+        #  huntarr:
+        #    image: huntarr/huntarr:latest
+        #    container_name: huntarr
+        ##    network_mode: service:vpn-ch
+        #    restart: always
+        #    ports:
+        #     - "9705:9705"
+        #    volumes:
+        #      - ${APPDATA}/huntarr:/config
+        #    environment:
+        #      - TZ=${TIMEZONE}
+        ##    depends_on:
+        ##      vpn-ch:
+        ##        condition: service_started      
 
-  cleanuparr:
-    image: ghcr.io/cleanuparr/cleanuparr:latest 
-    container_name: cleanuparr
-#    network_mode: service:vpn-ch
-    restart: unless-stopped
-    volumes:
-      - ${APPDATA}/cleanuparr:/config
-    environment:
-      - PUID=${UID_MAIN}
-      - PGID=${UID_MAIN}
-      - TZ=${TIMEZONE}      
-    ports:
-      - 11011:11011
-#    depends_on:
-#      vpn-ch:
-#        condition: service_started      
+        #  cleanuparr:
+        #    image: ghcr.io/cleanuparr/cleanuparr:latest 
+        #    container_name: cleanuparr
+        ##    network_mode: service:vpn-ch
+        #    restart: unless-stopped
+        #    volumes:
+        #      - ${APPDATA}/cleanuparr:/config
+        #    environment:
+        #      - PUID=${UID_MAIN}
+        #      - PGID=${UID_MAIN}
+        #      - TZ=${TIMEZONE}      
+        #    ports:
+        #      - 11011:11011
+        ##    depends_on:
+        ##      vpn-ch:
+        ##        condition: service_started      
 
   ombi:
     image: lscr.io/linuxserver/ombi:latest
@@ -219,6 +219,7 @@ services:
     volumes:
       - ${APPDATA}/jdownloader:/config:rw
       - ${INCOMING}:/output:rw
+      - ${STORAGE}:/storage:rw
     ports:
       - 5800:5800
     env_file:

@@ -32,70 +32,111 @@ services:
     ports:
       - 8050:8080
 
-  homarr:
-    container_name: homarr
-    image: ghcr.io/homarr-labs/homarr:latest
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
-      - ${APPDATA}/homarr:/appdata
-    env_file:
-      - ${ENV_FILES}/homarr.env
-    ports:
-      - '7575:7575'
+  #homarr:
+  #  container_name: homarr
+  #  image: ghcr.io/homarr-labs/homarr:latest
+  #  restart: unless-stopped
+  #  volumes:
+  #    - /var/run/docker.sock:/var/run/docker.sock # Optional, only if you want docker integration
+  #    - ${APPDATA}/homarr:/appdata
+  #  env_file:
+  #    - ${ENV_FILES}/homarr.env
+  #  ports:
+  #    - '7575:7575'
 
-  ownfoil:
-    container_name: ownfoil
-    image: a1ex4/ownfoil
-    restart: unless-stopped
-    env_file:
-    - ${ENV_FILES}/ownfoil.env
-    volumes:
-      - ${STORAGE}/Games/switch:/games
-      # - ${APPDATA}/ownfoil:/config
-    ports:
-      - "8500:80"
+  #ownfoil:
+  #  container_name: ownfoil
+  #  image: a1ex4/ownfoil
+  #  restart: unless-stopped
+  #  env_file:
+  #  - ${ENV_FILES}/ownfoil.env
+  #  volumes:
+  #    - ${STORAGE}/Games/switch:/games
+  #    # - ${APPDATA}/ownfoil:/config
+  #  ports:
+  #    - "8500:80"
 
-  phoneinfoga:
-    container_name: phoneinfoga
-    restart: on-failure
-    image: sundowndev/phoneinfoga:latest
-    command:
-      - "serve"
-    ports:
-      - "8080:5000"
+  #phoneinfoga:
+  #  container_name: phoneinfoga
+  #  restart: on-failure
+  #  image: sundowndev/phoneinfoga:latest
+  #  command:
+  #    - "serve"
+  #  ports:
+  #    - "8080:5000"
 
-  wallabag:
-    image: wallabag/wallabag
-    container_name: wallabag
-    restart: unless-stopped
-    env_file:
-      - ${ENV_FILES}/wallabag.env
+  #wallabag:
+  #  image: wallabag/wallabag
+  #  container_name: wallabag
+  #  restart: unless-stopped
+  #  env_file:
+  #    - ${ENV_FILES}/wallabag.env
+  #  ports:
+  #    - "8008:80"
+  #  volumes:
+  #    - ${APPDATA}/wallabag/images:/var/www/wallabag/web/assets/images
+  #  depends_on:
+  #    - wallabag-db
+  #    - wallabag-redis
+
+  #wallabag-db:
+  #  image: mariadb
+  #  restart: unless-stopped
+  #  env_file:
+  #    - ${ENV_FILES}/wallabag.env
+  #  volumes:
+  #    - ${APPDATA}/wallabag/data:/var/lib/mysql
+  #  healthcheck:
+  #    test: ["CMD", "/usr/local/bin/healthcheck.sh", "--innodb_initialized"]
+  #    interval: 20s
+  #    timeout: 3s
+  
+  #wallabag-redis:
+  #  image: redis:alpine
+  #  restart: unless-stopped
+  #  healthcheck:
+  #    test: ["CMD", "redis-cli", "ping"]
+  #    interval: 20s
+  #    timeout: 3s
+
+  peacockserver:
+    container_name: peacock
+    build: https://github.com/eskay993/peacockserver-docker.git
     ports:
-      - "8008:80"
+      - "3000:80"
     volumes:
-      - ${APPDATA}/wallabag/images:/var/www/wallabag/web/assets/images
-    depends_on:
-      - db
-      - redis
-  db:
-    image: mariadb
+      - ${APPDATA}/peacock/userdata:/Peacock/userdata
+      - ${APPDATA}/peacock/contractSessions:/Peacock/contractSessions
+      - ${APPDATA}/peacock/plugins:/Peacock/plugins
+
+
+  gameyfin:
+    image: ghcr.io/gameyfin/gameyfin:2
+    container_name: gameyfin
     restart: unless-stopped
     env_file:
-      - ${ENV_FILES}/wallabag.env
+      - ${ENV_FILES}/gameyfin.env
     volumes:
-      - ${APPDATA}/wallabag/data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--innodb_initialized"]
-      interval: 20s
-      timeout: 3s
-  redis:
-    image: redis:alpine
-    restart: unless-stopped    
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 20s
-      timeout: 3s
+      - ${APPDATA}/gameyfin/db:/opt/gameyfin/db
+      - ${APPDATA}/gameyfin/data:/opt/gameyfin/data
+      - ${APPDATA}/gameyfin/plugindata:/opt/gameyfin/plugindata
+      - ${APPDATA}/gameyfin/logs:/opt/gameyfin/logs
+      - ${STORAGE}/Games:/games
+    ports:
+      - "8008:8080"
+      # If you plan to use the included torrent plugin, uncomment the following lines:
+      # - "6969:6969"
+      # - "6881:6881"
+
+
+        #  retrom:
+        #    image: ghcr.io/jmberesford/retrom-service:latest
+        #    ports:
+        #      - 5101:5101
+        #    volumes:
+        #      - ${APPDATA}/retrom/library:/app/library
+        #      - ${APPDATA}/retrom/config:/app/config/
+        #      - ${APPDATA}/retrom/data:/app/data/
 
 #  slaanesh:
 #    image: ghcr.io/h-quer/slaanesh:latest
@@ -122,3 +163,4 @@ services:
   #     - ${STORAGE}/Games/ps2opl:/mnt/games:rw
   #   ports:
   #     - "445:445/tcp"
+  #
