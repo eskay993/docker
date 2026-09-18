@@ -99,31 +99,50 @@ services:
   #    interval: 20s
   #    timeout: 3s
 
-  peacockserver:
-    container_name: peacock
-    build: https://github.com/eskay993/peacockserver-docker.git
-    ports:
-      - "3000:80"
-    volumes:
-      - ${APPDATA}/peacock/userdata:/Peacock/userdata
-      - ${APPDATA}/peacock/contractSessions:/Peacock/contractSessions
-      - ${APPDATA}/peacock/plugins:/Peacock/plugins
+  #peacockserver:
+  #  container_name: peacock
+  #  build: https://github.com/eskay993/peacockserver-docker.git
+  #  ports:
+  #    - "4000:80"
+  #  volumes:
+  #    - ${APPDATA}/peacock/userdata:/Peacock/userdata
+  #    - ${APPDATA}/peacock/contractSessions:/Peacock/contractSessions
+  #    - ${APPDATA}/peacock/plugins:/Peacock/plugins
 
 
-  gameyfin:
-    image: ghcr.io/gameyfin/gameyfin:2
-    container_name: gameyfin
-    restart: unless-stopped
-    env_file:
-      - ${ENV_FILES}/gameyfin.env
-    volumes:
-      - ${APPDATA}/gameyfin/db:/opt/gameyfin/db
-      - ${APPDATA}/gameyfin/data:/opt/gameyfin/data
-      - ${APPDATA}/gameyfin/plugindata:/opt/gameyfin/plugindata
-      - ${APPDATA}/gameyfin/logs:/opt/gameyfin/logs
-      - ${STORAGE}/Games:/games
-    ports:
-      - "8008:8080"
+        #netiso:
+        #  image: ghcr.io/tuxuser/netiso-srv-rs:latest
+        #  container_name: netiso
+        #  restart: unless-stopped
+        #  volumes:
+        #    - /srv/netiso:/mnt
+        #  ports:
+        #    - 4323:4323
+
+        #netiso_xbox360_rursache:
+        # container_name: netiso
+        # image: ghcr.io/rursache/netiso_docker_xbox360:master
+        # restart: unless-stopped
+        # network_mode: host
+        # environment:
+        #   TZ: Europe/London
+        # volumes:
+        #   - /srv/netiso:/games:ro
+
+  #gameyfin:
+  #  image: ghcr.io/gameyfin/gameyfin:2
+  #  container_name: gameyfin
+  #  restart: unless-stopped
+  #  env_file:
+  #    - ${ENV_FILES}/gameyfin.env
+  #  volumes:
+  #    - ${APPDATA}/gameyfin/db:/opt/gameyfin/db
+  #    - ${APPDATA}/gameyfin/data:/opt/gameyfin/data
+  #    - ${APPDATA}/gameyfin/plugindata:/opt/gameyfin/plugindata
+  #    - ${APPDATA}/gameyfin/logs:/opt/gameyfin/logs
+  #    - ${STORAGE}/Games:/games
+  #  ports:
+  #    - "8008:8080"
       # If you plan to use the included torrent plugin, uncomment the following lines:
       # - "6969:6969"
       # - "6881:6881"
@@ -143,15 +162,12 @@ services:
 #    container_name: slaanesh
 #    user: ${UID_MAIN}:${UID_MAIN}
 #    restart: unless-stopped
+#    env_file:
+#      - ${ENV_FILES}/slaanesh.env
 #    volumes:
-#      - ${APPDATA}/slaanesh/config:/files/config
-#      - ${APPDATA}/slaanesh/import:/files/import
-#      - ${APPDATA}/slaanesh/export:/files/export
-#      - ${APPDATA}/slaanesh/covers:/files/covers
-#      - ${APPDATA}/slaanesh/database:/files/database
-#      - ${APPDATA}/slaanesh/downloads:/files/downloads
+#      - ${APPDATA}/slaanesh:/usr/src/app/data
 #    ports:
-#      - 8428:8080
+#      - 8421:3000
 
 
   # ps2smb:
