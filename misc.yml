@@ -32,6 +32,33 @@ services:
     ports:
       - 8050:8080
 
+        #koillection:
+        #  image: koillection/koillection
+        #  container_name: koillection
+        #  restart: unless-stopped
+        #  ports:
+        #    - 3500:80
+        #  env_file:
+        #    - ${ENV_FILES}/koillection.env
+        #  depends_on:
+        #    - db
+        #  volumes:
+        #    - ${APPDATA}/koillection/uploads:/uploads
+
+        ## Koillection Database : choose one of the following
+        #db:
+        #  image: postgres:16
+        #  container_name: koillection-db
+        #  restart: unless-stopped
+        #  env_file:
+        #    - ${ENV_FILES}/koillection.env
+        #  #environment:
+        #  #  - POSTGRES_DB=${DB_NAME}
+        #  #  - POSTGRES_USER=${DB_USER}
+        #  #  - POSTGRES_PASSWORD=${DB_PASSWORD}
+        #  volumes:
+        #    - "${APPDATA}/koillection/postgresql:/var/lib/postgresql/data"
+
   #homarr:
   #  container_name: homarr
   #  image: ghcr.io/homarr-labs/homarr:latest
@@ -157,17 +184,17 @@ services:
         #      - ${APPDATA}/retrom/config:/app/config/
         #      - ${APPDATA}/retrom/data:/app/data/
 
-#  slaanesh:
-#    image: ghcr.io/h-quer/slaanesh:latest
-#    container_name: slaanesh
-#    user: ${UID_MAIN}:${UID_MAIN}
-#    restart: unless-stopped
-#    env_file:
-#      - ${ENV_FILES}/slaanesh.env
-#    volumes:
-#      - ${APPDATA}/slaanesh:/usr/src/app/data
-#    ports:
-#      - 8421:3000
+        #slaanesh:
+        #  image: ghcr.io/h-quer/slaanesh:latest
+        #  container_name: slaanesh
+        #  user: ${UID_MAIN}:${UID_MAIN}
+        #  restart: unless-stopped
+        #  env_file:
+        #    - ${ENV_FILES}/slaanesh.env
+        #  volumes:
+        #    - ${APPDATA}/slaanesh:/usr/src/app/data
+        #  ports:
+        #    - 3000:3000
 
 
   # ps2smb:
